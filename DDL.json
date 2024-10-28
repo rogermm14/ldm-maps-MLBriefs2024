@@ -1,0 +1,72 @@
+{
+   "general": {
+      "demo_title": "Latent Diffusion Approaches for Conditional Generation of Aerial Imagery: A Study",
+      "description": "This demo allows you to query pre-trained diffusion models for conditional image generation.<br /><br />Our <a href='https://github.com/mikonvergence/DiffusionFastForward'><strong>code</strong></a> is an adaptation from <a href='https://github.com/mikonvergence/DiffusionFastForward'><strong>https://github.com/mikonvergence/DiffusionFastForward</strong></a>.<br /><br />  You can play with the number of time steps used in the reverse denoising process for image generation. A lower number of steps results in a lower quality image synthesis, but a higher inference speed.",
+      "requirements": "docker"
+   },
+   "build": {
+      "url": "git@github.com:rogermm14/ldm-maps-MLBriefs2024.git",
+      "rev": "origin/main",
+      "dockerfile": ".ipol/Dockerfile"
+   },
+   "inputs": [
+      {
+         "description": "input",
+         "max_pixels": "3000*3000",
+         "dtype": "x8i",
+         "ext": ".png",
+         "type": "image"
+      }
+   ],
+   "params": [
+      {
+         "id": "max_t",
+         "label": "Time steps",
+         "comments": "Diffusion time steps",
+         "type": "range",
+         "values": {
+            "default": "1000",
+            "max": 1000,
+            "min": 100,
+            "step": 100
+         }
+      }
+   ],
+   "results": [
+      {
+         "type": "gallery",
+         "contents": {
+            "Input": {
+               "img": "input.png"
+            },
+            "Output 1": {
+               "img": "output_00.png"
+            },
+            "Output 2": {
+               "img": "output_01.png"
+            },
+            "Output 3": {
+               "img": "output_02.png"
+            },
+            "Output 4": {
+               "img": "output_03.png"
+            }
+         }
+      },
+      {
+         "contents": "stdout.txt",
+         "label": "<p>Output</p>",
+         "type": "text_file"
+      }
+   ],
+   "archive": {
+      "enable_reconstruct": true,
+      "files": {
+         "input_0.png": "Input",
+         "output_00.png": "Output"
+      },
+      "info": {
+         "run_time": "run time"
+      }
+   },
+   "run": "python $bin/run_demo.py --img_path $input_0 --time_steps $max_t"

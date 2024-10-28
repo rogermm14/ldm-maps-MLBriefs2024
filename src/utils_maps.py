@@ -10,6 +10,7 @@ from diffusers import UNet2DModel, VQModel
 from src.pipeline import *
 import json
 import datetime
+import requests
 
 
 def parse_args(input_path=None):
@@ -282,11 +283,15 @@ def save_args_to_json(args, output_path):
         json.dump(args.__dict__, f, indent=2)
 
 def load_args_from_json(input_path, parser):
-    assert os.path.exists(input_path)
-    assert os.path.splitext(input_path)[-1] == ".json"
-    with open(input_path, 'r') as f:
-        t_args = argparse.Namespace()
-        t_args.__dict__.update(json.load(f))
+    if isinstance(input_path, dict):
+        loaded_dict = input_path
+    else:
+        assert os.path.exists(input_path)
+        assert os.path.splitext(input_path)[-1] == ".json"
+        with open(input_path, 'r') as f:
+            loaded_dict = json.load(f)
+    t_args = argparse.Namespace()
+    t_args.__dict__.update(loaded_dict)
     args = parser.parse_args(args=[],namespace=t_args)
     return args
 
@@ -457,13 +462,30 @@ class CondLatentDiffusionPipeline_maps(LatentDiffusionPipelineBase):
 
         return ImagePipelineOutput(images=image)
 
+def check_if_huggingface_model(model_path):
+    # model path example: rogermm14/MLBriefs24_5_conditional_CA_encodedmask
+    response = requests.get(f'http://www.huggingface.co/{model_path}')
+    if response.status_code == 200:
+        return True
+    else:
+        return False
+
 def load_pipeline(model_path, verbose=True):
 
     if verbose:
         print("Loading Diffusion pipeline from:")
         print(f"    - {model_path}\n")
 
-    args = parse_args(input_path=os.path.join(model_path, "args.json"))
+    huggingface_model = check_if_huggingface_model(model_path)
+
+    if huggingface_model:
+        response = requests.get(f"http://www.huggingface.co/{model_path}/raw/main/args.json")
+        response.raise_for_status()  # Raise an error for bad responses
+        args_path = json.loads(response.text)
+    else:
+        assert os.path.exists(model_path)
+        args_path = os.path.join(model_path, "args.json")
+    args = parse_args(input_path=args_path)
 
     vae = VQModel.from_pretrained("CompVis/ldm-celebahq-256", subfolder="vqvae")
     vae.requires_grad_(False)
@@ -479,9 +501,16 @@ def load_pipeline(model_path, verbose=True):
     if verbose:
         print("U-Net model loaded")
 
-    scheduler_config_path = model_path + "/scheduler/scheduler_config.json" 
-    noise_scheduler = DDPMScheduler.from_config(scheduler_config_path)
-    
+    noise_scheduler = DDPMScheduler.from_pretrained(model_path, subfolder="scheduler")
+    """
+    if huggingface_model:
+        noise_scheduler = DDPMScheduler.from_pretrained(model_path, subfolder="scheduler")
+    else:
+        scheduler_config_path = model_path + "/scheduler/scheduler_config.json"
+        assert os.path.exists(scheduler_config_path)
+        noise_scheduler = DDPMScheduler.from_config(scheduler_config_path)
+    """
+
     pipeline = CondLatentDiffusionPipeline_maps(
         vae=vae,
         unet=unet,
