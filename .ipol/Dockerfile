@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y $(cat packages.txt) && rm -rf /var/lib/
 
 # copy the requirements.txt and install python packages
 COPY requirements.txt requirements.txt
-#RUN pip3 install --no-cache-dir -r requirements.txt && rm requirements.txt
+RUN pip3 install --no-cache-dir -r requirements.txt && rm requirements.txt
 
 # copy the code to $bin
 ENV bin /workdir/bin/
