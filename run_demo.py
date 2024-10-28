@@ -26,6 +26,8 @@ def get_opt():
 
 def run_demo(img_path, time_steps):
     
+    torch.cuda.is_available()
+
     print(f"Input image: {img_path}")
     print(f"Number of time steps: {time_steps}")
     im_size = 256
