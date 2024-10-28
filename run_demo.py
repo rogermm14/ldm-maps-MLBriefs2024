@@ -8,8 +8,6 @@ import torch
 
 from src.utils_maps import *
 
-import gdown
-
 import warnings
 warnings.filterwarnings("ignore")
 
