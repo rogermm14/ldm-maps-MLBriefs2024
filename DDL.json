@@ -70,3 +70,4 @@
       }
    },
    "run": "python $bin/run_demo.py --img_path $input_0 --time_steps $max_t"
+}
