@@ -41,9 +41,10 @@ def run_demo(img_path, time_steps):
         print("Warning: Input image has more than 3 channels. Only the first 3 channels will be used and treated as RGB")
         input_rgb = input_rgb[:3, :, :]
 
+    minside = min(h,w)
     augmentations = transforms.Compose(
         [
-            transforms.CenterCrop((512, 512)),
+            transforms.CenterCrop((min(512, minside), min(512, minside))),
             transforms.Resize(im_size, interpolation=transforms.InterpolationMode.BILINEAR),
             transforms.Normalize([0.5], [0.5]),
         ]
