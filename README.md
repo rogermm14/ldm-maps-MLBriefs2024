@@ -21,7 +21,7 @@ If you find this code or work helpful, please cite:
 ---
 
 <img src="example_data/teaser.png" alt="Conditional LDM for Aerial Imagery" width="750"/>
-<strong>Figure 1:</strong> Left to right: Real aerial image, conditional map input to the diffusion model and 2 different synthetic output samples
+<strong>Figure 1:</strong> Left to right: Real aerial image, conditional map input to the LDM and 2 different synthetic output samples
 
 ---
 
