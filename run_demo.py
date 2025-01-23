@@ -45,7 +45,6 @@ def run_demo(img_path, time_steps):
         [
             transforms.CenterCrop((512, 512)),
             transforms.Resize(im_size, interpolation=transforms.InterpolationMode.BILINEAR),
-            transforms.ToTensor(),
             transforms.Normalize([0.5], [0.5]),
         ]
     )
