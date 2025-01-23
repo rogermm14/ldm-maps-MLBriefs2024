@@ -49,7 +49,7 @@ def run_demo(img_path, time_steps):
             transforms.Normalize([0.5], [0.5]),
         ]
     )
-    t_cond = augmentations(Image.open(img_path))
+    t_cond = augmentations(input_rgb)
     if (h != im_size) or  (w != im_size):
         print("\nWarning: Input image was resized to (256, 256)\n")
     t_cond = torch.tile(t_cond.unsqueeze(0), (4, 1, 1, 1))
