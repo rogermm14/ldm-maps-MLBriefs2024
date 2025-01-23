@@ -36,8 +36,11 @@ def run_demo(img_path, time_steps):
     assert os.path.exists(img_path), "Input image not found"
     input_rgb =  tf.functional.pil_to_tensor(Image.open(img_path))/255
     h, w = input_rgb.shape[1:]
-    assert input_rgb.shape[0] == 3, "Input image is not rgb. 3 channels expected."
-    
+    assert input_rgb.shape[0] >= 3, "Input image is not rgb. At least 3 channels are expected."
+    if input_rgb.shape[0] > 3:
+        print("Warning: Input image has more than 3 channels. Only the first 3 channels will be used and treated as RGB")
+        input_rgb = input_rgb[:3, :, :]
+
     augmentations = transforms.Compose(
         [
             transforms.CenterCrop((512, 512)),
