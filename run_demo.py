@@ -32,12 +32,13 @@ def run_demo(img_path, time_steps):
     im_size = 256
     n_outputs = 4
     out_dir="demo_output"
+    assert time_steps > 0, "Error: Diffusion time steps should be a positive integer number"
     
     # read input and force input size equal to (256, 256)
     assert os.path.exists(img_path), "Input image not found"
     input_rgb =  tf.functional.pil_to_tensor(Image.open(img_path))/255
     h, w = input_rgb.shape[1:]
-    assert input_rgb.shape[0] >= 3, "Input image is not rgb. At least 3 channels are expected."
+    assert input_rgb.shape[0] >= 3, "Input image is not rgb, at least 3 channels are expected"
     if input_rgb.shape[0] > 3:
         print("Warning: Input image has more than 3 channels. Only the first 3 channels will be used and treated as RGB")
         input_rgb = input_rgb[:3, :, :]
@@ -61,7 +62,7 @@ def run_demo(img_path, time_steps):
     tstart = time.time()
     ckpt_path = "rogermm14/MLBriefs24_5_conditional_CA_encodedmask"
     pipeline = load_pipeline(ckpt_path)
-    print(f"Model successfully downloaded in {int(time.time() - tstart)} seconds")
+    print(f"Model successfully downloaded in {int(time.time() - tstart)} seconds\n")
         
     # run diffusion model
     tstart = time.time()
@@ -75,7 +76,7 @@ def run_demo(img_path, time_steps):
         return_dict=False
     )
     images, cond_images = output
-    print(f"Model successfully run in {int(time.time() - tstart)} seconds")
+    print(f"Model successfully run in {int(time.time() - tstart)} seconds\n")
 
     # save output synthetic images
     os.makedirs(out_dir, exist_ok=True)
