@@ -57,7 +57,7 @@ You can also check our [online demo](https://ipolcore.ipol.im/demo/clientApp/dem
 
 ## Training
 
-The `train_maps.py` script can be use to train the diffusion model from scratch.
+The `train_maps.py` script can be used to train the diffusion model from scratch.
 
 `MLBriefs24_run_exp.sh` runs all the experiments discussed in the paper.
 
