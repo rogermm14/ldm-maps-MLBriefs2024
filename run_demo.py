@@ -5,6 +5,7 @@ import shutil
 from PIL import Image
 import torchvision.transforms as tf
 import torch
+import time
 
 from src.utils_maps import *
 
@@ -57,11 +58,13 @@ def run_demo(img_path, time_steps):
 
     # load model
     # run pipeline in inference (sample random noise and denoise)
+    tstart = time.time()
     ckpt_path = "rogermm14/MLBriefs24_5_conditional_CA_encodedmask"
     pipeline = load_pipeline(ckpt_path)
-    print("Loaded model successfully")
+    print(f"Model successfully downloaded in {int(time.time() - tstart)} seconds")
         
     # run diffusion model
+    tstart = time.time()
     generator = torch.Generator(device=pipeline.device).manual_seed(0)
     output = pipeline(
         input_condition_imgs=t_cond,
@@ -72,6 +75,7 @@ def run_demo(img_path, time_steps):
         return_dict=False
     )
     images, cond_images = output
+    print(f"Model successfully run in {int(time.time() - tstart)} seconds")
 
     # save output synthetic images
     os.makedirs(out_dir, exist_ok=True)
