@@ -45,7 +45,7 @@ python3 run_demo.py --img_path example_data/206_map.jpg --time_steps 500
 ```
 The parameter `img_path` points towards the input condition (the map image).
 
-The parameter `time_steps` refers to the number of diffusion time steps (positive integer).
+The parameter `time_steps` refers to the number of steps used in the reverse denoising process for image generation (positive integer).
 
 A lower number of `time_steps` results in a lower quality image synthesis, but a higher inference speed.
 
